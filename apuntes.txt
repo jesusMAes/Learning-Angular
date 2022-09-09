@@ -15,3 +15,111 @@ La parte en la que pone :[number ,number] le dice que el return es un array con 
 Angular usa typescript entre otras cosas porque permite inyección de dependencias, me dice inyección de dependencias le digo yo es que las drogas no...
 
 ya ha empezado la parte de codigo voy a hacer un git init para subir a github esto y meto cada carpeta dentro
+
+algo que he notado es que su html llama a bundle.js, esto es porque estamos usando webpack, webpack coge nuestro código y lo agrupa comprime o como quieras. Esto se ve en el archivo webpack config donde indica el input y el nombre del output
+
+Los tipos de typescript son como con java, lo basico boolean, number, string array... Ante la duda a la documentación. Esto ya lo sabía pero para inicializar variables se puede hacer normal como en javascript y typescript lo infiere o poner :string al lado del nombre de la variable para que sepa que es un string
+
+La diferencia es que si dices nombre = 'paco' javascript sabe que es string pero si dices let nombre; y no inicializas no lo va a saber, con typescript puedes decir let nombre: string y no te dejará meter ahí nada que no sea string
+
+en caso de que quieras que una variable reciba mas de un tipo de dato digamos una variable que pueda tener numeros o texto, que es raro que pase pero bueno eso se hace con el or: 
+
+let hp : number | string 
+Y ya deja hacerlo
+La siguiente es sobre arrays y objects, es un poco igual, la diferencia aquí es que dentro del array podemos decirle el tipo de datos que acepta el array y en objetos a cada variable puedes decirle también su tipo, basicamente lo mismo que en mongoDB al declarar Schemas le dices el tipo de dato de cada variable en la base de datos
+
+Also typescript infiere el tipo de dato, si dices: let cosas = ['paco', 1] dirá que es de tipo string |number 
+
+Si quieres más de un tipo puedes especificarlo:
+let miarray : (boolean | string | number)[] = [true, 'paco', 3]
+y te dejará hacerlo sin problema
+
+Para decir el tipo de cada variable de un objeto trabajamos con interfaces, esto se hace poniendo
+interface Personaje {
+  nombre: string;
+  hp: number;
+  habilididades: string[]
+}
+
+Luego al declarar nuestro objeto le decimos que es de tipo de esa interfaz
+
+const personaje: Personaje = {
+  nombre:'paco',
+  hp:100,
+  habilidades: ['saltar']
+}
+
+Y así podremos indicarle el tipo de las propiedades de nuestro objeto, nota que no te deja añadirle más propiedades, para hacer propiedades optativas le ponemos una interrogación junto a el:
+interfaz nombre {
+  propiedad?: string
+}
+
+Las funciones son una movida porque también se les declara el tipo, esto se le declara en la variable, al indicar la variable que recibe le dices de qué tipo es la misma y no te dejará llamarlo si le pasas otra, también le puedes indicar el tipo de dato del return , se hace como vimos antes, con : tipo detrás del paréntesis
+function sumar(a:number,b:number){
+    return a + b;
+}
+
+También se puede hacer en funciones flecha 
+const sumarFlecha = (a: number,b: number): number => {
+    return a + b
+}
+
+Puedes decirle si algun argumento es opcional u obligatorio ya sabes que los argumentos se ponen en orden tipo si pones funcion(a,b,c) y la llamas diciendo funcion(1,2) a será 1 y b 2
+
+Para hacer argumentos obligatorios y opcionales ponemos un ? en el opcional IMPORTANTE EL OPCIONAL SIEMPRE VA AL FINAL
+
+También puedes enviarle un valor por defecto
+function multiplicar (numero:number, otroNumero?:number, base:number =2): number {
+    return numero * base
+}
+Ahí le está diciendo que otronumero es opcional y la base si no se envia ninguna es que vale 2
+
+Si no quieres que haya return por ejemplo solo quieres modificar el dato de un objeto pero no necesitas retornarlo pones void
+function(argumentos): void {
+
+}
+
+Para añadir una función dentro de un objeto digamos 
+const nuevoPersonaje: PersonajeLOR = {
+    nombre:'legolas',
+    pv: 50,
+    mostrarHp() {
+        console.log( 'Puntos de vida: ', this.pv)
+    }
+}
+
+Tienes que añadirla en la interfaz 
+interface PersonajeLOR {
+    nombre: string;
+    pv: number;
+    mostrarHP: () => void;
+ 
+}
+En el parentesis puedes poner el tipo de los parametros, en realidad las interfaces son como clases chiquitas con propiedades y tal pero con menos funcionalidad que la clase en si 
+
+Si vas a usar un objeto dentro de otro lo declaras en la interfaz y añades los tipos de ese objeto 
+interface SuperHeroe {
+    nombre: string;
+    edad: number;
+    direccion: {
+        calle:string;
+        pais:string;
+        ciudad:string
+    }
+    mostrarDireccion: () => string
+}
+Aunque normalmente lo que se hace es declarar una interfaz aparte con ese objeto y decirle que dentro de esta es de tipo de esa interfaz
+interfaz Direccion {
+  calle:string;
+  pais:string;
+  ciudad:string
+}
+Y luego en la primera interfaz le dices que dirección es de tipo dirección
+
+La desestructuración de objetos es para acceder a determinada propiedad de un objeto, ya lo había visto en otros asuntos pero recordar va guay
+
+Es basicamente en lugar de acceder a la variable con reproductor.detalles.autor, 
+creas una variable sacando los valores de ese objeto
+const { } = reproductor,
+con lo que le pongas dentro busca la propiedad con ese valor, lo saca y crea una variable con ese valor, luego en lugar de liarte con puntos pones esa variable y ya estaría
+por ejemplo: const { volumen, segundo, cancion, detalles} = reproductor
