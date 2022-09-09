@@ -1,0 +1,51 @@
+He generado otro porque se estaba haciendo muy largo y así compartimento que de angular bastantes notas voy a tomar
+
+Angular tiene una forma de pensar parecida a la de react, funciona mediante modulos, cada modulo servirá para un propósito específico. Angular tiene cinco pilares fundamentales: Componentes, rutas, directivas, servicios y modulos. 
+
+-Los componentes son como un bloque que tiene su segmento de html y una parte de typescript que suele ser una clase, como un componente de react, renderizas y la clase le da funcionalidad. 
+
+-Los servicios ayudan a gestionar el estado son singletons, ya sabes objetos que solo se crea uno en la aplicación y su estado cambia y nos ayudan a no tener que usar redux y menos mal porque lo odio. Los servicios al final son lugares centralizados de información, nuestros componentes llaman al servicio para traer o cambiar información.
+
+-Las directivas hay de tres tipos: de componentes, estructurales y de atributos. Las de componentes son como un componente pero tienen un html reutilizable, es decir pones la directiva donde quieras y ahí te pone el html, no entiendo la diferencia con el componente a no ser que el componente no implique logica solo html y typescript pero sin funciones. 
+Las directivas estructurales modifican el dom añadiendo o quitando elementos. Las directivas de atributos cambian la apariencia o comportamiento de otro elemento. 
+
+-Las rutas son el equivalente al react router dom, segun la url del navegador muestran unos componentes u otros
+
+-Los modulos son cajas, un modulo tiene dentro componentes, rutas, directivas servicios, basicamente todo lo necesario para una funcionalidad, si quieres autentificar un usuario haces un modulo de autentificación que dentro le harás sus componentes, sus rutas, sus directivas y sus servicios. Si quieres otra funcionalidad otro modulo. Esto hace comodo y ordenado el desarrollo
+
+Importante, hay modulos ya hechos que te puedes descargar, editarlos y te ahorras desarrollarlo desde cero, tipo quieres hacer un calendario interactivo lo mismo lo ha hecho ya alguien, lo descargas le metes tres estilos para que quede como quieres y a correr, yo prefiero hacerlo de cero que siempre se aprende pero bueno hay cosas tan complejas que mejor confiar en algo ya hecho que pasarte 6 meses desarrollándolo
+
+Bien entramos ya a como se crea un proyecto, luego siempre se me olvida el código. 
+CREAR PROYECTO DE ANGULAR: Se hace con angularcli, que lo instalamos al inicio, el comando para crear un proyecto de angular es: ng new nombredelproyecto te da un asistente preguntando si quieres instalar tal o cual tu palante como los de alicante
+
+Ah mira, angular comprueba si ya tienes un git en la carpeta superior, en caso de tenerlo no te genera otro git como el cabron de react que luego subo las cosas y me manda a un git hijo y es un asco para el deploy 
+
+Vale, angular como react genera un muchillón de archivos, no asustarse, lo importante está en src y como en react la mitad lo borraremos pero en el curso explican para qué sirve cada cosa lo voy a anotar y así lo tengo aquí para el futuro 
+
+CORRER EL CODIGO DE ANGULAR: se usa el comando : ng serve -o
+esto coge el codigo lo transpila a javascript, monta un servidor con webpack y el -o le dice que cuando esté que te lo abra oye que template por defecto más mona tiene angular
+Nota, cuando tienes un json en este tipo de proyectos casi siempre son archivos de configuración, util saberlo
+-LOS ARCHIVOS QUE GENERA: 
+-Tsconfig.json incluye la configuración de typescript y le dice cómo quiere que lo traduzca a javascript. 
+-tsconfigSpec.json: coge lo que viene en el config anterior y añade configuración para la parte de las pruebas y test 
+-tsconfig.app.json: no suele tocarse pero es configuración sobre la app
+-package.json, como en react están las dependencias y demás lo mejor es no tocarlo y si quieres añadir lo haces via comandos, con la excepción de scripts que ahí puedes poner los comandos que quieres que se ejecuten cuando haces ng start o ng build y tal, las dependencias si se suben al build final pero las devdependencies no, son para mientras la creas
+
+-Angular.json: ESTE ES IMPORTANTE, tiene configuraciones de nuestra apps, como los assets, los styles para que lo inyecte en el html y demás.
+-el gitignore bueno ya sé que hace
+
+ARCHIVOS DENTRO DE SOURCE
+En una primera vista tiene una carpeta app, assets, environment, el favicon, el index html, y main.ts
+Dentro de app tenemos app component html y ts, incluye estilos y luego una plantilla html feisima porque tiene mucho svg y queda feo, pero esto lo borramos y ponemos nuestro hola mundo si ves aqui tienes app.component,css, app.component.html, app.component.specs.ts y app.component.ts todo esto son archivos que te hablan de un mismo componente el html da contenido el css da estilo a ese componente, el spec es de pruebas y lo puedes borrar. 
+El ts es una clase de typescript con un decorador y la clase. 
+El app.module es una clase con un decorador especial: @NgModule y dentro dice los modulos que componen la misma
+
+La parte de los assets es para recursos estáticos, los environments son para añadir las variables de entorno, como el archivo .env de react creo. 
+
+El index html es un html casi vacio pero tiene dentro un elemento llamado tal que así <app-root></app-root> no lo ha explicado aún pero en app.component.ts, su decorador dice: 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+entiendo que selector dice el nombre con que se va a referir en el html, el templateurl dice el trozo de html que se va a meter ahí y el styleUrls los estilos

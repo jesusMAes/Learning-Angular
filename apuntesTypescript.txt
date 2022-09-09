@@ -129,3 +129,40 @@ Para desestructurar un objeto se hace con {}, si quieres desestructurar un array
 const dbz: string[] = ['Goku', 'vegeta', 'Trunks']
 const [p1, p2, p3] = dbz
 Lo hace por posición en el array, no es como en objetos que te busca el valor con ese nombre
+
+
+GENERICOS: Son elementos que se usan mucho en angular, son una manera de decir qué tipo de datos devuelve una función.
+Esto existia también en java, o parecido, mira esta vaina:
+function queTipoSoy<T>(argumento:T){
+    return argumento;
+}
+el génerico se escribe con <> y la t es solo para decirle el tipo, el argumento es de ese mismo tipo, de esta manera es como si creases una variable, si invocas la función pasándole un string el tipo será string en el argumento, si la invocas pasando numero el tipo será number porque t será number y el argumento será number, en realidad es como una funcion normal en javascript es rizar el rizo pero bueh, su motivo tendrá
+
+PERO, también puedes indicar a la funcion a la hora de llamarla el tipo que quieres que sea 
+
+let soyExplicito = queTipoSoy<number>('Hola Mundo')
+esto no te dejará llamarla porque al parametro le dijiste que : T pero t en este caso será number, si no pones nada t toma el valor de parametro, de esta manera lo fuerzas
+
+Esto es util para recibir las peticiones http porque dependiendo de donde hagas la peticion te da un dato u otro y si estás con typescript te puede dar el error pero no sabes que dato indicarle porque lo mismo te devuelve tal o cual...
+Un lio que te cagas. Así puedes resolverlo
+
+DECORADORES DE CLASE 
+Ha tardado en llegar por lo que he leído en angular esto es muy importante, es parecido a cuando en java con spring usabas el @
+Son indicaciones que permiten cambiar las clases en el momento en que son definidas, cuando usas angular al momento de compilarse aplicar las funciones de ese decorador 
+En angular casi todo son clases y el decorador se pone delante de la clase, por ejemplo angular usa el decorador @Component para indicar que es un componente del mismo modo que en react creabamos una clase y decíamos extend react.component, lo mismito es pero con otra forma de escribirlo
+
+Un decorador es como una funcion que se ejecuta sobre tu clase, hasta donde sé no necesito saber la teoria de creación de decoradores, son funciones, por supuesto las que usan angular y otros frameworks son turbocomplejas entonces lo suyo es saber implementarlo. 
+PARA TRABAJAR CON DECORADORES TIENES QUE IR A TSCONFIG Y DESCOMENTAR LA FRASE QUE DICE EXPERIMENTALDECORATORS
+
+Los decoradores expanden y añaden funcionalidades. Angular los usa para ver si es un componente, un servicio, una directiva un pipe y demás y así al procesarlo los trata como tal 
+
+ENCADENAMIENTO OPCIONAL
+puede pasar que en una interface tengas una propiedad con ? para indicar que es opcional pero si luego tienes una función que la usa y el objeto que le pasas no tiene esa propiedad se te rompe todo 
+El encadenamiento opcional hace como un pequeño if: 
+
+function imprimeHijos (pasajero : Pasajero):void {
+
+    const numHijos =  pasajero.hijos?.length || 0
+    console.log(numHijos)
+}
+esa funcion le dice pasajero.hijos y la interrogación le dice, prueba, en caso de que no funcione o se rompa ejecuta el || y le pones ese valor, basicamente cuando trabajas con javascript sueles tenerlo en cuenta tu con un if mirando si existe, con typescript se hace así
