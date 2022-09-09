@@ -1,0 +1,17 @@
+Estoy viendo el curso de angular y usa typescript, ya lo había usado pero a nivel básico así que tomo nota de esto que no lo había visto antes. 
+Imagina esta funcion
+function calculaIva(productos: Producto[]): [number, number] {
+  let total = 0;
+  productos.forEach( ({precio}) => {
+    total += precio;
+  });
+
+  return [total, total*0.15]
+}
+es simple solo coge el precio y te devuelve un array con el precio y el precio con iva, lo interesante de typescript es que en productos:Producto[] le estás diciendo que recibe productos y que esos productos son un array de objetos tipo Producto.
+
+La parte en la que pone :[number ,number] le dice que el return es un array con dos elementos de tipo number así es imposible que se te cuele un string en la función y lo rompa todo
+
+Angular usa typescript entre otras cosas porque permite inyección de dependencias, me dice inyección de dependencias le digo yo es que las drogas no...
+
+ya ha empezado la parte de codigo voy a hacer un git init para subir a github esto y meto cada carpeta dentro
