@@ -123,3 +123,9 @@ creas una variable sacando los valores de ese objeto
 const { } = reproductor,
 con lo que le pongas dentro busca la propiedad con ese valor, lo saca y crea una variable con ese valor, luego en lugar de liarte con puntos pones esa variable y ya estaría
 por ejemplo: const { volumen, segundo, cancion, detalles} = reproductor
+
+Del mismo modo se puede desestructurar un arreglo
+Para desestructurar un objeto se hace con {}, si quieres desestructurar un array y crear una variable por cada objeto del arreglo lo haces con llaves de array []
+const dbz: string[] = ['Goku', 'vegeta', 'Trunks']
+const [p1, p2, p3] = dbz
+Lo hace por posición en el array, no es como en objetos que te busca el valor con ese nombre
