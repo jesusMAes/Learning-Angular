@@ -1,0 +1,27 @@
+Hago otro porque el anterior era larguísimo en este proyecto va a trabajar con apis y demás cosas además usa bootstrap y tomaré muchas notas además no me cobran por archivo así que palante
+
+Algo útil es que puedes filtrar el evento en el propio listener, si en un input pones:
+ (keyup.enter)="buscar($event)"
+Sólo llamará a la función cuando el key sea enter, util, te ahorra un if
+Otra forma guay de pasar datos en el propio html es usar una referencia local, es decir ponerle un nombre con # y luego en la funcion pasarle nombre.value, así: 
+<input 
+ type="text"  
+ class="form-control" 
+ placeholder= "Buscar gifs..."
+ (keyup.enter)="buscar(txtBuscar.value)"
+ #txtBuscar
+ />
+
+ OJO: @VIEWCHILD: es un decorador que nos permite coger un elemento del html y alterarlo sin recurrir a binds ni mierdas, en el paréntesis lo puedes buscar por query por etiqueta o lo que sea: 
+   @ViewChild('txtBuscar') txtBuscar:any;
+
+Crea una variable con ese elemento entonces si le dices: txtBuscar.value ='' lo vacía, si le dices txtBuscar.style.color: blue cambia el color, como cuando lo coges con queryselector o getElement
+
+NOT NULL ASSERTION: typescript es un coñazo y muchas veces no te deja hacer cosas que tu sabes que sí o sí van a estar, por ejemplo en el elemento de arriba si intentas ponerle su tipo correcto (elementRef)
+
+Te va a dar error porque oye y si es nulo? entonces hay un operador para decirle ni te rayes, confía en mi, yo manejo, si le pones ! al lado te deja sin hacer más preguntas, así: 
+ @ViewChild('txtBuscar') txtBuscar!:ElementRef;
+
+ Ahora ya puedes modificar lo que sea pero entrando a nativeElement porque te pasa el objeto que DENTRO tiene el objeto html :
+  this.txtBuscar.nativeElement.style='color:blue'
+

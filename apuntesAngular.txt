@@ -199,3 +199,18 @@ para hacer esto en la clase del hijo que manda la info le ponemos el decorador o
     private dbzService:DbzService
   ){}
   Si el servicio ya está inicializado porque otra clase hizo lo mismo no se crea uno nuevo sino que ambas acceden a la misma clase y los valores que actualiza una están disponibles para la otra, eso es singletone, la clase solo se crea la primera vez que es llamada y por tanto al actualizarse y estar disponibles para todo el que tenga esa inyección de dependencia todos los componentes acceden a información actualizada y cuando cambia esta ellos se rerenderizan para reflejar el cambio 
+
+  Por cierto el servicio se pone en el constructor por la sencilla razón de que se pasa por parámetros aunque angular lo hace behind the scene 
+
+  ACCEDER A LOS DATOS DEL SERVICIO: Esto se hace en el oninit que suelen tener los componentes, si no tienes lo puedes hacer en el constructor. Básicamente creas la variable digamos personajes y en el constructor le dices: this.personajes = dbzService.personajes
+  dbzservice es el nombre del servicio que está usando se puede cambiar por el que sea. y ya estaría, no sé si con eso ya es retroactivo 
+
+  Otra forma de hacerlo es con un getter, esa función que creaba una variable y hacía algo, queda así:
+    get personajes(): Personaje[]{
+    return this.dbzService.personajes
+  }
+  funciona igual, crea la variable personajes y le asigna ese valor
+
+  GENERAR BUILD DE PRODUCCIÓN y deploy en netlify: en el terminal usamos ng build --prod 
+  Esto genera una carpeta dist con todo procesado y pasado a javascript,todos los css metidos en un solo css y demás
+  Para subirla a netlify pues te haces cuenta y solo coges la carpeta dista y la carpeta que hay dentro con el nombre de tu app y la arrastras a netlify y ya. Tan fácil como eso 
