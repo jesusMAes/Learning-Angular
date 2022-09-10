@@ -50,7 +50,7 @@ const personaje: Personaje = {
 }
 
 Y así podremos indicarle el tipo de las propiedades de nuestro objeto, nota que no te deja añadirle más propiedades, para hacer propiedades optativas le ponemos una interrogación junto a el:
-interfaz nombre {
+interface nombre {
   propiedad?: string
 }
 
@@ -95,7 +95,7 @@ interface PersonajeLOR {
     mostrarHP: () => void;
  
 }
-En el parentesis puedes poner el tipo de los parametros, en realidad las interfaces son como clases chiquitas con propiedades y tal pero con menos funcionalidad que la clase en si 
+En el parentesis puedes poner el tipo de los parametros, en realidad las interfaces son como clases chiquitas con propiedades y tal pero con menos funcionalidad que la clase en si, por ejemplo no le puedes decir qué hace la funcion por eso las llaman clases tontas porque definen qué hay pero no como funciona
 
 Si vas a usar un objeto dentro de otro lo declaras en la interfaz y añades los tipos de ese objeto 
 interface SuperHeroe {
@@ -148,7 +148,7 @@ Un lio que te cagas. Así puedes resolverlo
 
 DECORADORES DE CLASE 
 Ha tardado en llegar por lo que he leído en angular esto es muy importante, es parecido a cuando en java con spring usabas el @
-Son indicaciones que permiten cambiar las clases en el momento en que son definidas, cuando usas angular al momento de compilarse aplicar las funciones de ese decorador 
+Son indicaciones que permiten cambiar las clases en el momento en que son definidas, cuando usas angular al momento de compilarse aplica las funciones de ese decorador 
 En angular casi todo son clases y el decorador se pone delante de la clase, por ejemplo angular usa el decorador @Component para indicar que es un componente del mismo modo que en react creabamos una clase y decíamos extend react.component, lo mismito es pero con otra forma de escribirlo
 
 Un decorador es como una funcion que se ejecuta sobre tu clase, hasta donde sé no necesito saber la teoria de creación de decoradores, son funciones, por supuesto las que usan angular y otros frameworks son turbocomplejas entonces lo suyo es saber implementarlo. 

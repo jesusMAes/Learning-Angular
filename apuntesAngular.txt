@@ -49,3 +49,73 @@ El index html es un html casi vacio pero tiene dentro un elemento llamado tal qu
   styleUrls: ['./app.component.css']
 })
 entiendo que selector dice el nombre con que se va a referir en el html, el templateurl dice el trozo de html que se va a meter ahí y el styleUrls los estilos
+
+En src hay un styles.css esto es un archivo de estilos GLOBAL, válido para todo
+
+VALE, el decorador component recibe argumentos en forma de objeto, uno es el selector, que es el nombre que tendrá el componente y es como lo referencias en el html, el templateurl dice la localización del archivo de html para mostrarlo, también puedes poner template a secas que lo que hace es que dentro del propio decorador le pones el html que quieres que se renderice. Yo prefiero tenerlo aparte más limpio.
+
+Importante, en el html puedes usar variables de javascript, por ejemplo en el archivo component.ts tienes esto 
+export class AppComponent {
+  title = 'Contador App';
+}
+Para ponerlo te vas al component.html y pones:
+<h1>{{title}}</h1>
+Y ya te muestra el valor de esa variable, es como en react solo que con una llave más y en lugar de poner esta parte en el render la pones en otro archivo pero están conectados de hecho cuando estás en el html te sale un botoncito que dice go to component si lo pinchas te manda al componente ts que corresponde a ese html. Dentro de esas llaves puedes poner codigo javascript como en react, 
+si pones <h2>{{1+2}}</h2>
+Lo que se renderiza es: 3
+
+Para disparar eventos en angular se usa una sintaxis especial, en la etiqueta html añades el evento entre paréntesis y le dices = "expresión javascript", curioso que no usa llaves ni nada, es directo, un ejemplo: 
+<button (click) = " numero = numero +1 ">+1</button>
+el (click) es lo que en react sería onClick, y lo que va entre comillas es lo que normalmente pondríamos entre llaves. Que curioso. aquí hay una lista con los nombres de cada evento : https://www.positronx.io/angular-8-events-list-for-event-binding/
+
+Btw por algun motivo no admite la sintaxis numero += 1, ah vale sí se puede hacer pero no en el html en si, se hace en el componente, lo mejor es poner todo lo de lógica en el componente y luego lo llamas en el html
+<button (click) = "sumar()">+1</button>
+
+Para crear un componente se puede hacer manual o automático, está enseñando la manual, inicialmente creas un archivo.ts, por convención le das el nombre, le pones .component.ts o .service o .pipe así luego es más fácil ojear y ver qué es cada cosa. 
+
+basicamente tu creas el componente usando el decorador component, pones la template del html que se va a ver, lo puedes definir en el mismo decorador o en un archivo aparte e indicar la dirección, creas tu clase para la lógica, esa clase lleva el export. Luego te vas a app.module.ts importas el componente y en ngmodule en declarations lo añades
+
+Algo curioso es que angular permite usar setters y getters, esto crean una propiedad pero esa propiedad se procesa como funcion, no los confundas con los setters de java, en este caso el getter luce así: 
+  get nombreCapitalizado (){
+    return this.nombre.toUpperCase()
+  }
+pones get luego el nombre de la variable y la función, la función se ejecuta sola por lo que para llamarlo en html haces 
+<p>{{nombreCapitalizado}}</p>
+Como cualquier otra variable solo que esta hace alguna cosa antes de salir 
+
+Lo de importar los componentes al modulo y tal es un coñazo, la manera rápida de crear un componente añadirlo al modulo y tal vas a la terminal y escribes: ng generate component (se puede abreviar como ng g c pero queda feo) y luego el nombre del componente y el path donde queremos que esté quedaría así: 
+
+ng generate component heroes/listado
+
+eso va a la carpeta heroes y crea un una carpeta listado que dentro tiene el componente listado no solo eso sino que además te crea el css el html la clase con su constructor su decorador y tal y te lo añade al modulo. Majísimo esto oye
+
+Esto te lo crea ya con implements oninit, un constructor y un metodo ngoninit, este metodo es como el mount o el useeffect, se ejecuta cuando se crear el componente y se usa para inicializar variables, por ejemplo hacer una petición a la api cuando se monta el componente para asignar valores a tus variables y poder enseñarlo en pantalla
+
+Las directivas estructurales cambian el dom , la directiva *ngFor permite crear un bucle for dentro del dom, por ejemplo si tienes un array de heroes puedes hacer esto: 
+<ol>
+  <li *ngFor="let heroe of heroes">
+    {{heroe}}
+  </li>
+</ol>
+el ngfor en li crea un li por cada elemento del array heroes, luego dentro con las doble llave le dices que se pinte y así lo ves 
+
+*ngIf es otra directiva estructural que renderiza una cosa u otra según la condición
+<div *ngIf="heroeBorrado != ''">
+  <h3>Heroe borrado: {{heroeBorrado}}</h3>
+</div>
+esto por ejemplo solo renderiza el div cuando la condición se cumple 
+También podemos hacer un else en este ngif, es un poco más raro que en react donde usamos el if y ya pero funciona así: 
+<div *ngIf="heroeBorrado != ''; else noBorrado">
+  <h3>Heroe borrado: {{heroeBorrado}}</h3>
+</div>
+
+<ng-template #noBorrado>
+  <h3>No ha borrado nada</h3>
+</ng-template>
+
+el ngif mira la condición, luego está el else y lo otro es una referencia local, es decir el nombre de un elemento, este elemento debe ser un ng-template y le ponemos el nombre con # en la etiqueta, por tanto cuando la condición no se cumpla se renderiza el ngtemplate y cuando sí se renderiza lo otro
+
+Los modulos no solo ayudan a organizar porque en un modulo pones todos los componentes necesarios para ese modulo, también ayudan para el lazyload porque tu puedes tener 100 modulos pero si el usuario no accede a la ruta en la que está ese modulo no hace falta cargarlo y perder rendimiento
+
+Crear un modulo es casi como crear un componente, haces una clase, la exportas y usas el decorador @ngmodule. Ese decorador tiene un objeto con propiedades, la propiedad declarations es un array que dice los componentes de ese modulo, en imports van otros modulos que quiere que use. 
+Luego para usarlo en la app tienes que ir a app.module y en sus imports importar el módulo, así no tienes que importar en app cada componente, lo haces en su respectivo módulo y luego le pasas la cajita entera a app y cada cosa en su lugar y ordenada y cuando necesitas trabajar en algo relacionado con ese modulo tu curras en tal modulo y no tocas el app, also recuerda siempre importar en tu modulo COMMONMODULE que es que lleva las funciones como ngif y ngfor
