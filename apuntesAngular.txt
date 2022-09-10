@@ -119,3 +119,83 @@ Los modulos no solo ayudan a organizar porque en un modulo pones todos los compo
 
 Crear un modulo es casi como crear un componente, haces una clase, la exportas y usas el decorador @ngmodule. Ese decorador tiene un objeto con propiedades, la propiedad declarations es un array que dice los componentes de ese modulo, en imports van otros modulos que quiere que use. 
 Luego para usarlo en la app tienes que ir a app.module y en sus imports importar el módulo, así no tienes que importar en app cada componente, lo haces en su respectivo módulo y luego le pasas la cajita entera a app y cada cosa en su lugar y ordenada y cuando necesitas trabajar en algo relacionado con ese modulo tu curras en tal modulo y no tocas el app, also recuerda siempre importar en tu modulo COMMONMODULE que es que lleva las funciones como ngif y ngfor
+
+También puedes crear un modulo desde el terminal igual que podías crear el componente y te lo generaba él solito. el comando es :
+
+ng generate module nombre del modulo 
+se puede acortar como ng g m nombre
+
+IMPORTANTE cuando pasas un evento a una función en angular, tipo un onclick onchange y tal si necesitas usar el evento tienes que pasarlo a la función SÍ O SÍ de esta manera <form (submit)="agregar( $event)">
+
+con ese dolar event se lo pasas, luego para recibirlo en la función(e:any) lo puedes llamar e event o como quieras, el :any es para que typescript no se enfade porque no sabes que tipo es le dices cualquiera y a correr
+
+En este caso era pasar el event para hacer el preventdefault y que no recargue pero angular tiene un modulo para hacer eso, te vas al modulo, en imports añades FormsModule que ayuda a manejar formularios imagino que además de para el refresh para pasar los datos
+
+Una vez tienes este modulo para prevenir el refresh en el form en lugar de ponerle (submit) le pones (ngSubmit) y hace lo mismo pero sin refresh
+
+Para pasar info desde un formulario debemos establecer su propiedad value con llaves de array, esto le dice que el value va a referenciar a una propiedad, y en el = "" le decimos a qué propiedad de la clase, puede ser una propiedad normal o como en el ejemplo la propiedad de un objeto 
+<input type="text" placeholder="Nombre" 
+          [value]="nuevo.nombre"/>
+eso le dice que el value del formulario es el de esa propiedad, pero ojo que así no se cambia el valor cuando tú escribes
+
+Para cambiarlo deberías poner un evento () puede ser change pero aquí usa submit 
+<input type="text" placeholder="Nombre" 
+          [value]="nuevo.nombre"
+          (input)="cambiarNombre( $event)"
+          />
+le pasa el evento y luego en la función le dices: this.nuevo.nombre = e.target.value y ya estaría
+
+
+UNA MANERA MEJOR DE HACER ESTO:
+        <input type="text" placeholder="Nombre" 
+          name="nombre"
+          [(ngModel)] = "nuevo.nombre"
+          />
+usando ngModel para esto con las llaves le decimos que va a ser igual a eso y con el paréntesis le decimos que está escuchando el cambio , no necesitamos una función que lo cambie, este ngmodel actualiza el valor de la propiedad solito
+
+OJO: LOS PIPES SON | y sirven para transformar visualmente la información, por ejemplo: {{numero | number}} coge el numero y le da formato de numero con las comas en los miles y tal 
+
+Para crear componentes hijos es igual que un componente pero no necesitamos exportarlos porque son componentes que tu solo vas a usar en el componente principal del modulo, luego exportas ese componente nada más 
+
+PASAR DATOS DESDE UN COMPONENTE PADRE
+En react usamos las props para pasar datos de padre a hijo, cuando queremos hacer lo mismo en angular dentro de la clase del hijo creamos una variable y le ponemos el decorador @Input, esto le dice que esos datos vendrán desde el padre 
+export class PersonajesComponent {
+
+  @Input() personajes: any[] = []
+}
+Y luego en la etiqueta html del componente hijo en los atributos de etiqueta le pones [propiedad] = "nombre de la propiedad del padre". Así:
+  <app-personajes [personajes]="personajes">
+
+Con las [] lo estás asociando imagino para que si cambia en el padre se lo pase al hijo y cambie también, ah vale el nombre entre comillas es el nombre de la propiedad del hijo que lo recibe puedes ponerle un nombre distinto al hijo y ya
+
+PASAR DATOS DEL HIJO AL PADRE
+En este caso se usa el decorador @output
+para hacer esto en la clase del hijo que manda la info le ponemos el decorador output, damos el nombre del emitter que es como se llama esta familia de métodos 
+ @Output() onNuevoPersonaje: EventEmitter<Personaje> = new EventEmitter()
+ le dice que es tipo eventEmitter que el objeto que va a recibir es de tipo personaje y que es igual a new event emitter, es decir que cree un emisor de eventos. 
+ Luego en la función del hijo que se lanza cuando se pulsa el botón decimos: 
+   this.onNuevoPersonaje.emit(this.nuevo)
+  Es decir el hijo crea un nuevo personaje con los datos que le manda el formulario usando ngModel y emite ese personaje al padre
+
+  PERO esto lo tienes que recibir desde el componente padre. En el html del padre, donde llama al componente hijo en su etiqueta ponemos: 
+  <app-agregar 
+     [nuevo]="nuevo"
+     (onNuevoPersonaje)="agregarNuevoPersonaje(nuevo)"
+    ></app-agregar>
+  El onnuevoPersonje es el nombre del emiter, cuando es llamado el padre ejecuta su función agregar personaje. ES IMPORTANTE QUE LE PASEMOS  $event este es el evento que hemos dicho en el hijo que era tipo personaje con <Personaje> al lado de eventEmitter
+
+  Luego en el padre creas la función y en ella actualizas el valor en este caso haces un push en una propiedad que es array
+
+  LOS SERVICIOS: ya lo ha dicho, es lo que hace que no tengamos que usar redux, el servicio es una clase central que contiene la información y a la que todos los componentes de su carpeta tienen acceso, es decir si lo pones en root podrán acceder todos
+
+  Como todo en angular un servicio también es una clase pero con un decorador distinto, este decorador es @Injectable
+  Imagino que porque le inyecta la información a los componentes
+
+  Para indicar el servicio nos vamos al module al que corresponde ese servicio y añadimos una propiedad más llamada providers, ahí ponemos todos los servicios que proveen información
+
+  Para que una clase tenga acceso al servicio en su constructor hacemos una inyección de dependencias tal que así: 
+  
+  constructor(
+    private dbzService:DbzService
+  ){}
+  Si el servicio ya está inicializado porque otra clase hizo lo mismo no se crea uno nuevo sino que ambas acceden a la misma clase y los valores que actualiza una están disponibles para la otra, eso es singletone, la clase solo se crea la primera vez que es llamada y por tanto al actualizarse y estar disponibles para todo el que tenga esa inyección de dependencia todos los componentes acceden a información actualizada y cuando cambia esta ellos se rerenderizan para reflejar el cambio 
