@@ -81,3 +81,74 @@ Con cada set añades un parametro, luego en la url pones la url a la que haces l
 Cambiamos de aplicación, lo señalo por si necesito ir a mirar código saber que está en esa
 
 Del mismo modo que en react las rutas dicen que componente hay que enseñar en base a la url que tienes en el buscador
+
+CREAR RUTAS MANUALMENTE: hay una manera automática pero las rutas solo son un modulo, aquí lo llama app-routing module, dentro de ese modulo creas una variable routes que tiene el tipo routes, es un array de objetos, cada objeto tiene el path que debe tener la url y el componente que se renderiza en ese caso, lo pego aquí: 
+
+const routes: Routes = [
+  {
+    path: '',
+    component: PorPaisComponent,
+    pathMatch:'full'
+  },
+  {
+    path:'region',
+    component: PorRegionComponent,
+  },
+  {
+    path:'capital',
+    component: PorCapitalComponent
+  },
+  {
+    path: 'pais/:id',
+    component: VerPaisComponent
+  },
+  {
+    path:'**',
+    redirectTo:''
+  }
+]
+
+@NgModule({
+  imports:[
+    RouterModule.forRoot(routes)
+  ],
+  exports:[
+    RouterModule
+  ]
+})
+
+El pathMatch full es porque en la url base si añades /user o algo como la base es ese / lo comprueba y te manda allí, al decirle pathmatch full le dices que lo renderice solo cuando es eso y no cuando tiene barra porque va a renderizar una subruta o algo, donde está el :id es como en el back cuando queremos recibir un argumento por params, luego la parte de ngmodule, routermodule es el modulo de angular que hace el curro de crear las rutas, for root se refiere a tu aplicación base, puedes usar forchild para crear rutas relativas, y le pasas tu array de rutas. 
+
+Para usar el modulo tenemos que ir al app.module e importarlo allí primero para tener acceso a él, solo con esto si en la url escribes una de esas rutas te deja acceder aunque no se ve
+
+IMPLEMENTAR EL ROUTING, esto es tan simple como ir a la parte en la que quieres que se muestre ese routing (si tienes header, navbar y demás lo mismo solo te interesa hacer un div y mostrar el componente ahí sin que cambie todo) y usar un componente que exporta RouterModule. Este componente es:
+<router-outlet></router-outlet>
+
+Y ya está, así de fácil, ese componente te renderiza el componente correspondiente cuando cambies de ruta. MAGIA. 
+
+IMPORTANTE en una aplicación solo vas a tener un router usando forRoot, el resto serán ya rutas hijas
+
+Okay con esto puedes navegar a otras rutas pero escribiendo en el navegador, una manera de cambiar es con un a href= /pais y al pinchar te manda a esa ruta y funciona bien pero recarga la pagina y eso a su vez limpia los archivos de nuestras variables y es mejor hacerlo de otra manera. 
+
+La solución es sencillisima, routermodule ya lleva una manera de crear estos links sin recargar todo, se hace con router link, un ejemplo:
+      <li routerLink="/capital"
+        class="list-group-item ">Por capital</li>
+eso es un li que al pinchar en el lleva a la ruta capital sin refrescar. Además al ponerse como atributo de una etiqueta html lo podemos usar en un montón de cosas, no estamos obligados a usar botones o enlaces, la parte mala es que no nos señala que es un enlace pero eso se arregla con css
+
+Algo curioso es que puedes usar routerLinkActive para indicar la clase que quieres que se aplique a ese elemento cuando estás en su url, aquí usa el active de bootstrap pero puedes usar la que quieras, 
+<li routerLink=""
+          routerLinkActive="active"
+          class="list-group-item ">
+Así cambiamos el estilo para indicar la que está seleccionada ahora mismo
+         [routerLinkActiveOptions]="{ exact:true}"
+Si le añadimos eso hacemos que tenga que ser EXACTAMENTE ese path, esto sirve para el estilo de la raiz que como siempre va a cumplirse porque es la raiz siempre estaría activado, de esta manera si lleva algo detrás le quita el estilo
+
+Voy a poner esto aquí porque es el tipo de código que leeré mañana y diré qué onda. 
+    this.paisService.buscarPais(this.termino)
+                    .subscribe( resp => {
+                      console.log(resp)
+                      this.hayError = false
+                    }, (err) => {
+                      this.hayError = true
+                    });
+Dont panic, en el service tenemos una función que hace return de la llamada http aquí usamos el suscribe para ejecutarla y el subscribe toma dos parametros, la res, y el error, lo que hacemos es, con res ejecutar una función y con error otra, y ya, solo que la sintaxis es fea y marea. 
