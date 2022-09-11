@@ -25,3 +25,59 @@ Te va a dar error porque oye y si es nulo? entonces hay un operador para decirle
  Ahora ya puedes modificar lo que sea pero entrando a nativeElement porque te pasa el objeto que DENTRO tiene el objeto html :
   this.txtBuscar.nativeElement.style='color:blue'
 
+Cuando creamos un servicio usando ng g s nombredelservicio Angular no va a actualizar el module, PERO, si vas al servicio, dentro de su decorador injectable verás que pone providedIn: 'root', con esto Angular hace que este servicio automáticamente esté disponible en toooda la aplicación sin necesidad de ponerlo en modulos 
+
+Aquí usa un pipe interesante se llama titlecase, es en el ngfor que crea cada busqueda en sidebar, te pone la primera letra de cada palabra en mayúscula
+
+REALIZAR PETICIÓN HTML: para empezar está trabajando con gyphy que te pide una apikey, la he cogido de la web y pegado y tiene como querys en la url la apikey y la palabra a buscar, esto no es angular cambia segun la api que uses
+
+Angular tiene ya un objeto que permite hacer las peticiones, primero en app.module tienes que importar HttpClientModule, que es el modulo que contiene esa función
+Ahora nos vamos al servicio que estemos usando, en este caso gifs.service, ahí tenemos que inyectar uno de los servicios de ese modulo, en el contructor de nuestro servicio hacemos
+constructor(private http: HttpClient){}
+
+Esto nos va a permitir usar las funciones de http que tiene angular. Estas funciones funcionan con observables en lugar de promesas,  las promesas una vez acaban no cambian su valor, el observable sí. Dicho en corto hace lo mismo que la promesa pero con funciones añadidas, además los observables pueden ser síncronos o asíncronos, vale pego y explico: 
+    this.http.get('https://api.giphy.com/v1/gifs/search?api_key=Nw77jidkgketHBpXsk7CUWopM2D9hN4j&q=dragon ball&limit=10')
+      .subscribe( resp => {
+        console.log(resp)
+      })
+    
+this.http es el objeto que inyectamos en el constructor, el get sencillamente para decir que es get, luego va la url y luego usamos .subscribe() esto es como si fuera el then, cuando la petición se complete va a ejecutar ese callback
+
+Una versión especificando el tipo y accediendo a data que es donde va lo importante: 
+ .subscribe( (resp:any) => {
+        console.log(resp.data)
+      })
+Para acceder a data tienes que decirle a typescript lo de any o no te dejará porque no sabe los tipos
+
+Luego para renderizarlo en el subscribe el resp.data lo asignas a una variable y ya en el html te buscas la vida para poner la imagen o lo que quieras, lo importante es saber recuperar la información el resto es libre
+
+Truco para ponerle el tipo a la response, a mi me gusta dejarlo en any y luego ya con el console log lo miras pero bueno. Para hacer un tipado de esa respuesta lo que haces es ir a postman donde pruebas la llamada y en el response que te da la copias, luego te vas a quicktype.io, una web que le pegas ese json y te crea una interfaz así rapidito, ahí pegas esa respuesta luego lo copias todo te creas tu archivo para esa interfaz, lo pegas ahí y como ya te viene todo exportado te vas a donde haces la petición importas la interfaz y le dices oye la response es de tipo esta interfaz
+
+Ahora va a hacer que el historial no se pierda al recargar usando localstorage, lo normal en estas movidas es usar bbdd y tener ahí el del usuario incluso para minimizar llamadas lo mantienes en una variable y lo mandas cuando cierren o recarguen pero está bien aprenderlo
+
+El session storage se borra cuando cierras, el local storage se guarda ahí no persiste toda la vida pero dura bastante, no es para alamcenar info sensible, es para cosas que te dan igual si se ve o no de hecho mejor guardarlo ahí  y ahorrar llamadas a la base de datos
+
+Para almacenar es tan fácil como en la función que actualiza el historial poner:
+        localStorage.setItem('historial', JSON.stringify(this._historial))
+yasta, luego podemos usar el constructor en nuestro service para ver el localstorage y si tiene pues usamos json parse para recrearlo y el estado estará igual que como se dejó 
+    if(localStorage.getItem('historial')){
+      this._historial=JSON.parse(localStorage.getItem('historial')!)
+    }
+Fijate en la exclamación tras historial, es para decirle a typescript que nos deje hacerlo, sencillamente lo parseamos de vuelta a array
+
+también podemos guardar el array de gifs de la ultima busqueda del usuario en el local storage y que se mantenga ahí
+
+Cuando haces las peticiones a menudo es un follón lidiar con la url los ? &= tal angular da un objeto llamado httpParams que permite crear eso, funciona así 
+   const params = new HttpParams()
+    .set('api_key', this.apiKey)
+    .set('limit', '10')
+    .set('q', query)
+    
+Con cada set añades un parametro, luego en la url pones la url a la que haces la petición añades el ? y pones ${params}
+  this.http.get<SearchGifsResponse>(`https://api.giphy.com/v1/gifs/search?${params}`)
+
+
+--------------------------------PAISES APP--------------------------
+Cambiamos de aplicación, lo señalo por si necesito ir a mirar código saber que está en esa
+
+Del mismo modo que en react las rutas dicen que componente hay que enseñar en base a la url que tienes en el buscador
