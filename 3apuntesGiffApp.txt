@@ -152,3 +152,70 @@ Voy a poner esto aquí porque es el tipo de código que leeré mañana y diré q
                       this.hayError = true
                     });
 Dont panic, en el service tenemos una función que hace return de la llamada http aquí usamos el suscribe para ejecutarla y el subscribe toma dos parametros, la res, y el error, lo que hacemos es, con res ejecutar una función y con error otra, y ya, solo que la sintaxis es fea y marea. 
+
+madre mía el debouncer. El debouncer es un observable como una promise con lsd, pego aquí el código y me lo explico: 
+ ngOnInit(): void {
+    this.debouncer
+        .pipe(
+          debounceTime(300)
+        )
+        .subscribe( valor => {
+           console.log('debouncer:', valor)
+        })
+  }
+
+  debouncer: Subject<string> = new Subject();
+  teclaPresionada(){
+    this.debouncer.next( this.termino)
+  }
+VALE. tenemos una propiedad debouncer que es un subject, eso es un observale, en el on init la llamamos y le decimos el pipe que lo que hace es esperar a que deje de cambiar el valor, es decir a que dejes de teclear, mientras tecleas el valor de termino está cambiando, cuando paras se espera 3 milisegundos y pasa al siguiente, el siguiente es suscribe que observa ese valor y ejecuta algo. 
+
+En tecla presionada llamamos a debouncer.next y le pasamos termino, el .next es lo que hace que se ejecuten pipe y suscribe, y valor será el término. 
+
+SUSCRIBIRSE A LA URL: 
+para observar los cambios de una url usamos esto: 
+  constructor( private activatedRoute: ActivatedRoute) { }
+
+ this.activatedRoute.params.subscribe( ({id}) => {
+       console.log(id)
+      this.paisService.getPaisPorAlpha( id )
+          .subscribe( pais => {
+             console.log(pais)
+           })
+     })
+
+  cargamos activatedRoute en el constructor, esto nos da información sobre la url, con params vemos los parametros de esa url en este caso la url es /pais/:id, entonces lo que nos da es el id, luego con eso podemos hacer cualquier cosa. 
+
+  En este caso lo usamos para cuando cambia hacer una petición con ese id y renderizar todo el componente para que se vea el pais relativo a esa id 
+
+  Otra forma de hacer eso es usando switchmap:
+     this.activatedRoute.params.pipe(
+    switchMap((params) => this.paisService.getPaisPorAlpha( params['id']))
+   )
+   .subscribe( resp => {
+    console.log(resp)
+   })
+  pipe coge los parametros, switchmap los recibe y hace un la petición usando el id y se suscribe
+
+  CAMBIAR CLASE DINÁMICAMENTE: para cambiar la clase de un div de manera dinámica hay muchas formas de hacerlo, una que enseña aquí es esta: 
+  <button 
+    *ngFor="let region of regiones"
+    (click)="activarRegion(region)"
+     class="btn btn-outline-primary"
+     [class.abc]="region === regionActiva">
+      {{region}}
+    </button>
+Es un boton con un for para generar uno por cada elemento de su array, el evento click cambia la región activa entonces cuando la región del botón coincide con la activa le AÑADE la clase abc a las demás que ya tiene, cuando pulsas otro boton se la quita
+
+Una manera mejor es con ngclass 
+ [ngClass]="{
+      'btn-primary': regionActiva === region,
+      'btn-outline-primary': regionActiva !== region
+     }"
+lo pones en una etiqueta y por cada clase le pones la condición para decidir cuando se aplica, queda un poco feo engordar tanto el html pero quien soy yo para juzgar
+
+No me jodas tanto lio para acabar usando una condición ternaria, al menos ya sé que también se pueden usar aquí. 
+[class]="(region === regionActiva) 
+      ? 'btn btn-primary'
+      : 'btn btn-outline-primary'"
+cuando quieres decirle que lo de después es javascript le pones el atributo entre [] y el resto ya sé qué es, esa misma lógica la puedes poner en una función de tu clase y en lugar de meterlo en el html le pones [class] = "getClaseCss(region)" y queda más limpio

@@ -1,0 +1,16 @@
+esta app va sobre los pipes pero también usa componentes de otra librería así aprendo a implementarlos. 
+
+Un pipe una forma de transformar la información del html
+
+primeNg es un conjunto de componentes, como angular material, lo instalas y lo pones y ya está y tu lo personalizas, cuando trabajas con estos paquetes de componentes funcionas importando modulos, ya lo veremos
+
+Recuerda que los pipes transforman la informanción de manera visual, es decir al usarlos tus datos no se ven afectados de ninguna manera solo cambian su aspecto pero tus datos siguen ahí comoditos, hay bastantes si quieres saber te vas a su documentación a mi solo me parece interesante el que convierte de singular a plural una palabra segun el valor de una variable o el de femenino y masculino
+
+Para cargar primeNg además de instalarlo en npm tienes que ir a angular.json y en styles pegas las lineas que te da primeng, imagino que material funciona igual
+
+Esto lo voy a apuntar porque me parece buena práctica, en lugar de estar importando cada modulo de primeng en app module hace un modulo aparte, los importa allí y los exporta, luego este modulo se importa en app module y se te queda todo más ordenado y si añades añades en primeng.module
+
+RECUERDA revisa siempre bien los modulos y las importaciones la mitad de veces que se rompe algo es por eso 
+
+ANIMACIONES EN ANGULAR, no sabía que para las animaciones hubiera que hacer algo concreto pero bueno, al menos con primeNg y otros componentes con animaciones necesitas BrowserAnimationsModule que segun la documentación es el que permite las animaciones, esto se importa en app.module 
+Vamos que si intentas usar una animación y se rompe mires eso
