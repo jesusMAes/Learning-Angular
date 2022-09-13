@@ -33,3 +33,78 @@ Crear PIPES el comando es casi como el resto: ng g pipe (o p) y localización/no
 
 -----------------------------------HEROES APP--------------------
 Aquí es donde habla de rutas hijas, ponte las pilas que casi siempre vas a usarlas, también tenemos Angularmaterial y lazyload que optimiza el rendimiento
+
+el lazyload se puede hacer gracias a trabajar con modulos, es decir si alguien no está autorizado no tiene sentido cargar los modulos de dentro de la app
+
+RUTAS HIJAS: funciona parecido a las rutas normales usan routingmodule un array que dice: ruta: 'home' component: homecomponent. 
+
+Primero tienes que crear un modulo en la carpeta que quieres que tenga hijas, es decir si tienes una carpeta app -> auth -> pages
+Auth tendrá su modulo para componentes y su modulo para rutas, es decir le dirías: ng g m auth/authRouting
+
+y te genera ahí el modulo, es un modulo normal
+okay lo voy a pegar porque esto es algo que tendré que hacer mucho
+
+const routes: Routes = [
+  {
+    path:'',
+    component: homeComponent,
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent
+      },
+      {
+        path: 'registro',
+        component: RegisterComponent
+      },
+      {
+        path: '**',
+        redirectTo: 'login'
+      }
+    ]
+  }
+]
+
+@NgModule({
+  declarations: [],
+  imports: [
+    RouterModule.forChild(routes)
+  ],
+  exports:[
+    RouterModule
+  ]
+})
+Ya ves que es normal pero en lugar de tener un objeto para cada ruta general tienes un objeto general con la propiedad children que ya sí que son las rutas en sí, luego en imports no usas forroot, de eso solo hay uno en toda la aplicación, usas for child. 
+
+Tras eso te vas al auth module porque lo tienes que importar allí primero
+Luego te vas al app-routingmodule y ahí le tienes que decir oye si alguien navega a esta ruta cargas este modulo, así si no entrar a auth no lo carga y más rendimiento, esto se hace en el array de routes, le añades un objeto tal que así: 
+  {
+    path:'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
+Lo que le estás diciendo es cuando alguien entre al path carga este children, usa una función porque primero tiene que importar el modulo eso lo mismo tarda entonces va el then que le dice que cuando esté en memoria entonces el modulo que regresa es el authmodule. 
+
+IMPORTANTE: TIENES QUE CARGAR EL AUTHMODULE NO EL AUTHROUTINGMODULE
+
+Y A PARTIR DE ESA RUTA las rutas del hijo ya van relativas porque primero pasas por el auth, ese te carga su hijo, el hijo tiene sus rutas que se construyen a partir de auth. 
+
+  importante decir que al html de router-outlet no hay que hacerle nada, sencillamente te lo renderiza ahí. 
+
+Esto ya son rutas hijas PERO otras veces esto se refiere a cuando estás en un componente y ese componente a su vez tiene las rutas hijas, es decir, cuando entras a heroes vas a home y ahí deberías tener otro router-outlet y dentro de el se renderizarían estas rutas hijas del mismo modo que en las rutas normales tienes el app.html y las rutas se renderizan en él 
+
+Esto se hace tan fácil como en las rutas, antes de los childrens y después del path, ponerle component: y un componente, por ejemplo home, luego en el html de ese home pones un router-outlet
+entonces las rutas hijas lo que hacen es renderizarte el home y ese home ya te renderiza la subruta que toque. 
+
+Es decir, al entrar a heroe se renderiza home y todas las demás hijas se renderizan ahí, esto va bien por ejemplo si quieres un encabezado o una barra de opciones fija en todas las rutas de x sección pues la home lo tiene y el resto se renderiza en su parte. 
+También para aplicar estilos concretos a una sección de la aplicación
+
+ANGULAR MATERIAL: funciona exactamente igual que primeng, cogemos el componente que queremos usar vamos a su documentación, lo importamos en nuestro materialmodule, lo exportamos para que otras paginas tengan acceso y lo suamos en el html, luego ya jugamos con javascript el componente y la documentación hasta que salga lo que queremos
+
+Recuerda siempre importar el modulo de material en el modulo en que quieras usar esos componentes
+
+MAT ICON: Importante que si quieres usar un icon de material puedes ver los nombres aqui: https://fonts.google.com/icons?selected=Material+Icons:bookmark&icon.query=menu
+y que para que se vea el icono el nombre va entre tag de apertura y de cierre: <mat-icon>menu</mat-icon>
+
+LEVANTAR BBDD: esto es por si se me olvida mañana, vas en la consola a herores server y usas json-server --watch db.json
+
+Va a empezar con cosas crud recuerda que para peticiones y demás lo suyo es hacerlo desde un service
