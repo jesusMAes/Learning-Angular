@@ -14,3 +14,22 @@ RECUERDA revisa siempre bien los modulos y las importaciones la mitad de veces q
 
 ANIMACIONES EN ANGULAR, no sabía que para las animaciones hubiera que hacer algo concreto pero bueno, al menos con primeNg y otros componentes con animaciones necesitas BrowserAnimationsModule que segun la documentación es el que permite las animaciones, esto se importa en app.module 
 Vamos que si intentas usar una animación y se rompe mires eso
+
+PIPE PERSONALIZADO: no he apuntado nada de los pipes porque son simples, vas a la documentación y está bien explicado. PERO podemos crear nosotros un pipe personalizado, y esto es util porque luego podemos crear nosotros para que se vea como queremos
+
+Para crear un pipe como todo en angular lo que hacemos es usar una clase y luego ponerle el decorador @Pipe({})
+
+En esas llaves le vas pasando argumentos. 
+Name dice el nombre con el que te vas a referir a el.
+Todos los pipes tienen que implementar el metodo pipetransform. 
+
+Eso nos obliga a tener un metodo transform en esa clase que entiendo es el metodo que ejecuta el pipe para transformar la información
+  transform( value:string ):string {
+    return value.toUpperCase()
+  }
+yasta, luego en el html pones {{ 'palabra'|mayusculas}} y te ejecuta la función. Para pasar a mayúsculas es una chorrada pero con esto puedes hacerlo todo lo complejo que quieras y llamarlo de una manera cómoda, además no altera el contenido original
+
+Crear PIPES el comando es casi como el resto: ng g pipe (o p) y localización/nombre
+
+-----------------------------------HEROES APP--------------------
+Aquí es donde habla de rutas hijas, ponte las pilas que casi siempre vas a usarlas, también tenemos Angularmaterial y lazyload que optimiza el rendimiento
