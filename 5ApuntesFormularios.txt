@@ -1,0 +1,9 @@
+Hago otro par los formularios reactivos, esta app tocará validación de formularios, el uso de templates para diseñar formularios y mensajes, directivas personalizadas, validaciones asíncronas y 
+
+Hay dos formas principales de manejar formularios: la aproximación por template o los formularios reactivos, basicamente tu puedes ir funcionando usando las propiedades del typescript y eso de [(valor)] y palante, pero angular tiene muchas herramientas para manejar los formularios que facilitan la vida, o la complican según se vea
+
+La diferencia entre ambos tipos es que en los template la logica va en el html, los reactivos dan más control especialmente facilitando las validacionesç
+
+RUTAS AUTOMÁTICAS: al iniciar una app de angular te pregunta si quieres implementar el routing, si le das que si te genera en app un routingmodule básico con las rutas vacías, po vaya esperaba más
+
+AHH VALE, podemos generar un modulo con ng g m --routing y nos crea el modulo PERO le añade las rutas hijas, eso sí, para cargarlo desde root todavía tenemos que hacerlo manualmente loadchildren y luego aquí definir los children y tal
