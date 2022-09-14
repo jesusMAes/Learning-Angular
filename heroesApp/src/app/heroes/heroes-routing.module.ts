@@ -5,6 +5,8 @@ import { ListadoComponent } from './pages/listado/listado.component';
 import { AgregarComponent } from './pages/agregar/agregar.component';
 import { BuscarComponent } from './pages/buscar/buscar.component';
 import { HomeComponent } from './pages/home/home.component';
+import { HeroeComponent } from './pages/heroe/heroe.component';
+
 
 
 const routes: Routes = [
@@ -27,6 +29,11 @@ const routes: Routes = [
       {
         path:'buscar',
         component: BuscarComponent
+      },
+      {
+        path:':id',
+        component: HeroeComponent
+
       },
       {
         path: '**',

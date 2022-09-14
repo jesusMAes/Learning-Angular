@@ -108,3 +108,19 @@ y que para que se vea el icono el nombre va entre tag de apertura y de cierre: <
 LEVANTAR BBDD: esto es por si se me olvida mañana, vas en la consola a herores server y usas json-server --watch db.json
 
 Va a empezar con cosas crud recuerda que para peticiones y demás lo suyo es hacerlo desde un service
+
+VARIABLES DE ENTORNO: en react usabas .env para meter las variables de entorno como la url de la base de datos o el puerto, en Angular tenemos una carpeta llamada environments, ahí hay dos environments, el que lleva prod es de producción y el otro es el normal que sería de desarrollo, puedes poner en uno variables de entorno para desarrollo por ejemplo nosotros usamos localhost en desarrollo, y en el de producción cambiarlas por otra y que sea el que se use cuando se despliega
+
+Esto nos permite crear variables de entorno, puedes ir al environment 
+export const environment = {
+  production: false, 
+  baseUrl: 'http://localhost:3000'
+};
+y ponerle la url y luego donde tengas que referenciarla la usas así : 
+ private baseUrl:string = environment.baseUrl
+ y la usas donde te haga falta, y te quedan las rutas como: 
+ baseUrl+'/heroes'
+
+ mas corto y manejable y si tienes que cambiarlo porque cambias de puerto o algo pues lo cambias ahí, anyway como junior dudo que yo toque eso
+
+ Esta parte del crud en realidad es lo mismo, el curro es diseñar las cosas pero luego te basas en lo mismo, coger propiedades del heroe o del formulario y mandar las cosas en un formato concreto a un endpoint que es quien lo hace
