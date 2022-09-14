@@ -124,3 +124,70 @@ y ponerle la url y luego donde tengas que referenciarla la usas así :
  mas corto y manejable y si tienes que cambiarlo porque cambias de puerto o algo pues lo cambias ahí, anyway como junior dudo que yo toque eso
 
  Esta parte del crud en realidad es lo mismo, el curro es diseñar las cosas pero luego te basas en lo mismo, coger propiedades del heroe o del formulario y mandar las cosas en un formato concreto a un endpoint que es quien lo hace
+
+ PROTECCIÓN DE RUTAS: para la protección de rutas básica (más adelante verá la que usa también el backend junto a un token que es lo suyo) se usa algo que se conoce como Guard, esto no es más que otra clase, esta clase se dedica a decirle a angular: oye antes de entrar a esta ruta esperate que haga yo un chequeo, llama a su métod si regresa true deja pasar si regresa false no 
+
+ Imagino que la info de login va en un service, si usamos tokens que se almacenen por cookies como hacía en react el token se guarda en el pc del user y en el momento en que de primeras se carga la app podríamos comprobar e iniciar la sesión y poner el service para que le deje
+
+ El tema de la protección de rutas no es solo algo de botones, si tu no pones ningun enlace a x ruta pero alguien sabe cual es y lo escribe en la barra del navegador podría entrar igualmente.
+ Es por eso que los guards no son funciones para ejecutar en el botón tipo comprobamos cuando lo pulsas, sino funciones que se ejecutan sobre una ruta o url para prevenir el acceso de multiples formas
+
+ Esto ya me lo sé pero lo recuerdo: los usuarios se validan contra el backend, cuando mete sus datos tu coges y se los pasas al backend, el usa el nombre, id o correo para recuperar al usuario de la base de datos, luego contrasta las contraseñas pasándolas por los hash y los salt encriptados, si le sale bien a ti la info que te manda es que está auténticado, o si te hace falta más cosas como foto de perfil, nombre, y lo que necesites para personalizar. 
+ PERO LAS CONTRASEÑAS NUNCA VAN AL FRONT
+
+ Los guards vienen integrados en angular.
+ Un guard es un servicio común y corriente que nos sirve para implementar reglas de validación en las rutas. 
+ Se generan escribiendo: 
+
+ ng g guard y la ruta
+
+ Al ejecutar el comando te hace preguntas de qué elementos quieres implementar: canactivate, canactivatechild, can deactivate y canload
+
+ ASÍ SE VE EL GUARD:
+ import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivate, CanLoad, Route, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate, CanLoad {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+  canLoad(
+    route: Route,
+    segments: UrlSegment[]): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    return true;
+  }
+}
+
+ves que es un servicio inyectable, que exporta una clase con dos metodos, can load es un metodo que indica si se puede o no cargar un módulo, ese metodo tiene la ruta de tipo route, y los segmentos como parámetros, después los :Observable dice el tipo de cosas que puede devolver y luego ya tienes la función con return true, entiendo que la idea es que al acceder a la ruta el guard te intercepta como pasaba con los midlleware de node y coge los datos y comprueba para ver y decidir si true o false
+
+Para implementar el guard te vas a donde tienes las rutas ojo también puedes usarlos en rutas hijas por si quieres dar acceso a unas partes sí y a otras no como por ejemplo si tienes varios roles de usuario
+
+en las rutas pones el guard
+  {
+    path:'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
+    canLoad: [ AuthGuard]
+  },
+  le dices que chequee el guard antes de cargar el módulo, en ese array puedes poner más guards por si necesitas condiciones diversas o por lo que sea y se ejecutará el can load de cada uno
+
+  Para entender mejor el guard el url segment lo que hace es cortar la ruta basándose en los /, luego lo puedes usar para hacer cosas personalizadas
+
+  Una forma de implementarlo es que en login comprobamos el user de la bbdd, esto actualiza nuestro auth service, luego en el guard inyectamos el auth service y miramos si hay un id, señal de que el usuario se registró exitosamete, entonces dejamos pasar
+
+  
+      if(this.authService.auth.id){
+        return true
+      }else{
+        return false
+      }
+
+aquí usa el local storage para mantener la sesión aunque lo suyo sería usar token, esto ya te lo sabes, cuando el user inicia sesión setStorage, cuando inicias la app miras el storage a ver si hay o no
+
+IMPORTANTE CANLOAD SOLO SIRVE PARA EVITAR QUE SE CARGUE EL MÓDULO.
+Si el modulo ya estaba cargado podrá acceder, imagino que para eso esta el canActivate, por eso hay que poner siempre el load y el activate para tener seguridad. El can activate funciona igual aunque sus parametros se llaman rutasnapshot, y routersnapshot, como fotos del estado actual

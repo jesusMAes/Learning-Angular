@@ -166,6 +166,15 @@
       "alter_ego": "Norrin Radd",
       "first_appearance": "The Fantastic Four #48",
       "characters": "Norrin Radd"
+    },
+    {
+      "superhero": "viuda negra",
+      "alter_ego": "scarlet",
+      "characters": "scarlet johanson",
+      "first_appearance": "1995",
+      "publisher": "DC Comics",
+      "alt_img": "https://i.pinimg.com/originals/f0/6a/ff/f06aff03ad9b595e1d7ca88b5346596f.jpg",
+      "id": "wDtOPY_"
     }
   ]
 }
