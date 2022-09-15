@@ -1,4 +1,4 @@
-Hago otro par los formularios reactivos, esta app tocará validación de formularios, el uso de templates para diseñar formularios y mensajes, directivas personalizadas, validaciones asíncronas y 
+Hago otro par los formularios reactivos, esta app tocará validación de formularios, el uso de templates para diseñar formularios y mensajes, directivas personalizadas, validaciones asíncronas
 
 Hay dos formas principales de manejar formularios: la aproximación por template o los formularios reactivos, basicamente tu puedes ir funcionando usando las propiedades del typescript y eso de [(valor)] y palante, pero angular tiene muchas herramientas para manejar los formularios que facilitan la vida, o la complican según se vea
 
@@ -7,3 +7,66 @@ La diferencia entre ambos tipos es que en los template la logica va en el html, 
 RUTAS AUTOMÁTICAS: al iniciar una app de angular te pregunta si quieres implementar el routing, si le das que si te genera en app un routingmodule básico con las rutas vacías, po vaya esperaba más
 
 AHH VALE, podemos generar un modulo con ng g m --routing y nos crea el modulo PERO le añade las rutas hijas, eso sí, para cargarlo desde root todavía tenemos que hacerlo manualmente loadchildren y luego aquí definir los children y tal
+
+vale, la diferencia entre template y reactive es que en template le decimos a angular que se encargue de manejarlo y la logica está en el lado del template en html, en reactivos el html es lo más básico posible y el trabajo va en el lado del typescript
+Vale se viene tocho de código, así hacemos un formulario en la aproximación por template:
+ <form (ngSubmit)="guardar( miFormulario)" #miFormulario="ngForm">
+
+ Le ponemos nombre con el #, decimos que es ngform, eso es obligatorio, en el ngSubmit lo pasamos. 
+ Lo recibimos en la función PERO, para que pase los valores del input tenemos que añadir esto en cada input:
+         <input type="text"
+               class="form-control"
+               ngModel
+               name="producto"
+               placeholder="Nombre del producto">
+Con el ngModel estamos diciendo que nos interesa ese input, con el name le damos nombre para el par clave valor
+
+Para recibirlo el tipo es NgForm: 
+  guardar(miFormulario: NgForm){
+    console.log(miFormulario.value)
+  }
+
+Date cuenta que puedes coger ese formulario sin necesidad de crearle una variable en tipescript:
+
+  <pre> {{miFormulario.value }}</pre>
+Es decir eso ya te lo imprime en pantalla. El #miformulario es como una variable creada en el propio html
+
+directivas personalizadas: esto se cubre después, se hacen igual con una clase ts con el @Directive({})
+
+Dentro lleva el nombre con el que nos vamos a referir en el html y cuando pase por ahí ejecutará la directiva, un ejemplo básico de directiva: 
+@Directive({
+  selector: '[customMin][ngModel]',
+  providers: [{
+    provide: NG_VALIDATORS,
+    useExisting: CustomMinDirective,
+    multi:true
+  }]
+})
+export class CustomMinDirective{
+
+  @Input() minimo!: number;
+
+  constructor(){
+    console.log('Directive', this.minimo)
+  }
+}
+el selector el primer elemento es como se referencia en html y el segundo especifíca que solo puede llamarse si hay un ngmodel en esa etiqueta, el provide le da la propiedad de validar y el use existing llama a esta directiva, si lo entiendo bien el ngvalidator mira esto antes de validad un formulario un ejemplo de como llamarla: 
+ <input type="number"
+                   class="form-control"
+                   ngModel
+                   name="Existencias"
+                   customMin
+                   [minimo]="0"
+                   placeholder="Existencias del producto">
+Fijate que el minimo es lo que luego se le pasa por @Input. 
+Ojo acuerdate de importarla en el modulo que toque
+
+En este caso estamos usando la directiva para validar un formmulario por lo que nuestra directiva tiene que implementar la interfaz Validate que viene con Angular: 
+CustomMinDirective implements Validator
+Esto te obliga a poner un metodo validator parecido a este:
+validate(control: FormControl){
+    const inputValue = control.value;
+    console.log(inputValue)
+    
+    return null
+  }
