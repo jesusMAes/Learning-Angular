@@ -4,7 +4,7 @@
 <div class="row">
 
   <div class="row">
-    <form (ngSubmit)="guardar( )" 
+    <form (ngSubmit)="guardar()" 
       #miFormulario="ngForm"
       autocomplete="off">
     <!--campo de producto-->
@@ -13,7 +13,7 @@
       <div class="col-sm-9">
         <input type="text"
                class="form-control"
-               ngModel
+               [ngModel] = "initForm.producto"
                name="producto"
                placeholder="Nombre del producto"
                required
@@ -28,7 +28,7 @@
       <div class="col-sm-9">
         <input type="number"
                class="form-control"
-               ngModel
+               [ngModel] ="initForm.precio"
                name="precio"
                placeholder="Precio del producto">
                <span
@@ -44,10 +44,9 @@
           <div class="col-sm-9">
             <input type="number"
                    class="form-control"
-                   ngModel
-                   name="Existencias"
-                   customMin
-                   [minimo]="0"
+                   [ngModel] = "initForm.existencias"
+                   name="existencias"
+
                    required
                    placeholder="Existencias del producto">
     
@@ -82,7 +81,7 @@
     <span>Value</span>
     <pre> {{miFormulario.value |json}}</pre>
 
-    <span>Custom directive</span>
-    <pre> {{miFormulario.controls['existencias'].errors | json}}</pre>
+    <!-- <span>Custom directive</span>
+    <pre> {{miFormulario.controls['existencias'].errors | json}}</pre> -->
   </div>
 </div>

@@ -70,3 +70,101 @@ validate(control: FormControl){
     
     return null
   }
+
+FORMULARIOS REACTIVOS: La idea es tener el minimo de código en el html y hacerlo todo en el typescripts
+
+Toda la lógica se pon en el typescript, lo primero que tienes que hacer es importar reactiveFormsModule
+Una forma básica de hacer el formulario reactivo es en la clase de typescript usar formGroup:
+  miFormulario: FormGroup = new FormGroup({
+    'nombre' : new FormControl('RTX 4080')
+  })
+  ahí creas un formulario y las propiedades de ese objeto van a ser los campos del formulario, para enlazarlo con el formulario del html solo le añades   <form  
+      autocomplete="off" [formGroup]="miFormulario">
+
+Y ya se pone, para enlazar los inputs con el objeto usamos la etiqueta formControlName y el nombre que le pongas el mismo del objeto y se enlaza con el valor del objeto
+
+ <input 
+          class="form-check-input" 
+          type="checkbox"    
+          formControlName="condiciones"
+          id="flexCheckDefault">
+
+Otra forma de hacerlo es con formBuilder, esto es un servicio por lo que tienes que inyectarlo en el constructor
+Así se hace usando formBuilder:
+  miFormulario: FormGroup = this.fb.group({
+    nombre: ['RTX 4080TI', ,],
+    precio: [0, ,],
+    existencias: [0, ,]
+  })
+  te ahorras estar poniendo el new formcontrol en cada uno, fijate en las comas, ahí es donde irían primero validaciones y luego validaciones asíncronas, en la parte del html funciona exactamente igual, solo que en la clase así es más limpio
+
+  Los validarodes se ponen así nombre: ['RTX 4080TI',Validators.required,],
+  con eso dices que es un campo requerido.
+  Para añadir más de un validador los metemos entre llaves de array
+
+      nombre: ['RTX 4080TI',[Validators.required, Validators.minLength(3)],],
+
+Hay muchos validadores predefinidos, pero también puedes crear uno personalizado
+
+Una forma de validar todo al pulsar el botón de enviar es como la validación de cada campo se hace cuando lo tocas puedes coger en el metodo de envío y usar esto:  this.miFormulario.markAllAsTouched()
+Que básicamente toca todos los campos y eso llama a nuestra función para validar ese campo y si es invalido sale el marcador condicional que tenemos. Lo he apuntado porque dice que da buena experiencia de usuario
+
+Si la validación es exitosa al enviar podemos usar este método:     this.miFormulario.reset()
+Que vacía los campos los pone untouched y tal, comodísimo oye
+
+Si quieres que en tu formulario haya un array porque por ejemplo vas a guardar x datos en un array y luego quieres crearles un campo por cada dato tienes que usar fombuilder.array, así 
+
+ miFormulario:FormGroup = this.fb.group({
+    nombre: ['', [Validators.required, Validators.minLength(3)] ],
+    favoritos: this.fb.array( [], Validators.required )
+  })
+En el [] metes los datos y luego tienes los validators que te apetezca usar, para que sean form control tienes que meterlo como arrays dentro, que cosa más rara:
+
+favoritos: this.fb.array( [
+      ['metal gear'],
+      ['Death Stranding']
+    ], Validators.required )
+
+Aunque se escriban con [] no son arrays son elementos de formControl y les puedes añadir  validaciones, meterlos en el html es dificil, va un poco así la cosa 
+ <label class="col-sm-3 col-form-label">Favoritos</label>
+    <div class="col-sm-9" formArrayName="favoritos">
+
+      <div class="input-group mb-1" 
+        *ngFor="let favorito of favoritos
+        Arr.controls; let i=index">
+        <input type="text" class="form-control" 
+          [formControlName]="i">
+
+el div que envuelve tiene que tener el formarrayname, luego el ngform usa favoritos arr que en realidad es un get de esto:
+
+this.miFormulario.get('favoritos') as FormArray
+
+un mareo colosal
+
+Crear validaciones personalizadas. El modulo validator nos da muchas validaciones guays pero a veces queremos hacer nuestra validaciones personalizadas, para esto usamos validators.patterns, un ejemplo de validar un formato nombre apellido:
+  nombreApellidoPattern:string = '([a-zA-Z]+) ([a-zA-z]+)'
+
+  miFormulario : FormGroup = this.fb.group({
+    nombre: ['', [Validators.required, Validators.pattern(this.nombreApellidoPattern) ] ]
+  })
+  Crea una propiedad que es un regex más o menos, usa validator pattern para apuntar a esa propiedad, el string de la propiedad comprueba que sean letras, que haya un espacio después de las primeras letras y luego más letras
+
+
+  AVER, EL ASYNC VALIDATOR, esto es tan lioso que normalmente haría como que no existe pero validar email contra una base de datos se hace mucho y hay que pasar por el aro. Para meter un asinc validator va en el tercer argumento del formbuilder group, 
+
+  El async validator está creado en un service aparte porque vas a tener que implementar asyncvalidator, este servicio queda un poco así:
+  export class EmailValidatorService implements AsyncValidator{
+
+  constructor(private http: HttpClient) { }
+
+
+  validate(control: AbstractControl ):Observable<ValidationErrors | null> {
+
+    const email = control.value;
+    console.log(email)
+    return this.http.get<any[]>(`http://localhost:3000/usuarios?q=${email}`)
+   }
+}
+
+En el constructor inyectamos htttpclient para las peticiones, al implementar asinc nos obliga a tener un metodo validate que devuelve un observable o null, esto es porque mientras se hace la petición das un observable y la validación se suscribe a ese observable esperando la respuesta, luego el return coge el valor que se le pasa para hacer una petición get
+
