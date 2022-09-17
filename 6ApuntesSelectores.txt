@@ -7,3 +7,17 @@ No está diciendo nada nuevo pero trabaja bastante con observables miratelo
 
 ----------------APLICACIÓN LIFECYCLE---------------------
 En esta habla de los hooks, esto como en react son métodos que podemos llamar cuando angular hace alguna cosa en nuestra aplicación, normalmente cuando cambia el componente
+
+Por lo general los más útiles son ngOninit y ngO ndestroy para cargar datos y para limpiar datos, nada más es una sección cortita y con poca miga
+
+---------------------------APLICACIÓN MAPAS---------------
+Mapasiona
+
+Esta sección usa una librería de javascript y no sabía yo que podía chocar con angular
+
+usa una librería llamada mapbox que es como google maps, para usar la api te pide un token, lo añadimos en los environments para usarlo luego como variable
+
+Algo que hace cuando hacemos un import de la librería es que como está escrita en js no tiene interfaces ni tipado y con eso typescript se mosquea, la manera de solucionarlo es haciendo:
+npm i --save-dev @types/mapbox-gl 
+
+Lo pongo porque esto es para mapbox pero el @types es un paquete que lleva las interfaces de muchísimas librerías que no fueron escritas en typescript y puede servirme para otras
