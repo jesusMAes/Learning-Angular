@@ -29,7 +29,7 @@ Cuando creamos un servicio usando ng g s nombredelservicio Angular no va a actua
 
 Aquí usa un pipe interesante se llama titlecase, es en el ngfor que crea cada busqueda en sidebar, te pone la primera letra de cada palabra en mayúscula
 
-REALIZAR PETICIÓN HTML: para empezar está trabajando con gyphy que te pide una apikey, la he cogido de la web y pegado y tiene como querys en la url la apikey y la palabra a buscar, esto no es angular cambia segun la api que uses
+REALIZAR PETICIÓN HTTP: para empezar está trabajando con gyphy que te pide una apikey, la he cogido de la web y pegado y tiene como querys en la url la apikey y la palabra a buscar, esto no es angular cambia segun la api que uses
 
 Angular tiene ya un objeto que permite hacer las peticiones, primero en app.module tienes que importar HttpClientModule, que es el modulo que contiene esa función
 Ahora nos vamos al servicio que estemos usando, en este caso gifs.service, ahí tenemos que inyectar uno de los servicios de ese modulo, en el contructor de nuestro servicio hacemos

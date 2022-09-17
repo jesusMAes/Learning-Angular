@@ -1,0 +1,9 @@
+Esta es una app enrollada pero tiene un método para hacer varias peticiones http al mismo tiempo y eso siempre mola
+
+toda esta parte inicial vba sobre formularios reactivos, cargar desde http, echale un ojo a selector page component si alguna vez tienes que usar selects cuyas opciones vienen de la base de datos
+Además usa peticiones encadenadas, básicamente hace una se suscribe cuando le da el resultado usa ese resultado para hacer la siguiente y así puedes seguir hasta que la locura se apodere de ti, el universo se consuma sobre si mismo o se te rompa el pc
+
+No está diciendo nada nuevo pero trabaja bastante con observables miratelo 
+
+----------------APLICACIÓN LIFECYCLE---------------------
+En esta habla de los hooks, esto como en react son métodos que podemos llamar cuando angular hace alguna cosa en nuestra aplicación, normalmente cuando cambia el componente

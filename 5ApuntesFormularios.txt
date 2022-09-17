@@ -98,7 +98,7 @@ Así se hace usando formBuilder:
   })
   te ahorras estar poniendo el new formcontrol en cada uno, fijate en las comas, ahí es donde irían primero validaciones y luego validaciones asíncronas, en la parte del html funciona exactamente igual, solo que en la clase así es más limpio
 
-  Los validarodes se ponen así nombre: ['RTX 4080TI',Validators.required,],
+  Los validadores se ponen así nombre: ['RTX 4080TI',Validators.required,],
   con eso dices que es un campo requerido.
   Para añadir más de un validador los metemos entre llaves de array
 
@@ -106,7 +106,7 @@ Así se hace usando formBuilder:
 
 Hay muchos validadores predefinidos, pero también puedes crear uno personalizado
 
-Una forma de validar todo al pulsar el botón de enviar es como la validación de cada campo se hace cuando lo tocas puedes coger en el metodo de envío y usar esto:  this.miFormulario.markAllAsTouched()
+Una forma de validar todo al pulsar el botón de enviar es: como la validación de cada campo se hace cuando lo tocas puedes coger en el metodo de envío y usar esto:  this.miFormulario.markAllAsTouched()
 Que básicamente toca todos los campos y eso llama a nuestra función para validar ese campo y si es invalido sale el marcador condicional que tenemos. Lo he apuntado porque dice que da buena experiencia de usuario
 
 Si la validación es exitosa al enviar podemos usar este método:     this.miFormulario.reset()

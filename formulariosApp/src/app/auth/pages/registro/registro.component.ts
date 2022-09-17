@@ -35,6 +35,23 @@ export class RegistroComponent implements OnInit {
     validators: [this.validatorService.camposIguales('password', 'password2')]
   })
 
+
+  get emailErrorMsg(): string{
+
+    const errors = this.miFormulario.get('email')?.errors
+
+    if(errors?.['required']){
+      return 'Email es obligatorio'
+    }else if(errors?.['pattern']){
+      return 'El formato no es el correcto'
+    }else if(errors?.['emailTomado']){
+      return 'Ese mail ya está en uso'
+    }
+
+    return ''
+    
+  }
+
   campoNoValido(campo:string){
     return this.miFormulario.get(campo)?.invalid && 
            this.miFormulario.get(campo)?.touched
