@@ -21,3 +21,45 @@ Algo que hace cuando hacemos un import de la librería es que como está escrita
 npm i --save-dev @types/mapbox-gl 
 
 Lo pongo porque esto es para mapbox pero el @types es un paquete que lleva las interfaces de muchísimas librerías que no fueron escritas en typescript y puede servirme para otras
+
+REGLA DE ORO CUANDO TRABAJAS CON LISTENERS: si tienes listeners y te sales de una pantalla estos siguen existiendo y si entras se pueden crear dos, entonces cuando tengas listener siempre SIEMPRE implementa el metodo ondestroy y ahí destruye esos listeners para no tener diez mil.
+
+En el caso del mapa para poner un listener usamos mapa.on(listener), en el ondestroy para quitar ese listener usamos mapa.of(listener), así:
+
+this.mapa.off('zoom', () => {});
+La función es por si quieres hacer algo más pero podemos dejarla vacia
+
+El resto de la app es así, util para revisitar este código si algun día necesito hacer mapas 
+
+---------------------GRAFICOS EN ANGULAR---------------------
+
+Saber hacer gráficos siempre viene bien, a la gente le gustan los gráficos
+Para los gráficos usa ng2 charts, tiene una documentación guay enseñando el código de cada gráfico tanto en la parte html como en typescript así que lo puedes coger copiar y personalizar no tienes que escribirlo de 0, rectifico su documentación es una caca pero no ha salido nada nuevo, solo peticiones, moldear los datos para que puedan salir en la gráfica y tal
+
+-------------------DIRECTIVAS PERSONALIZADAS------------------
+Las directivas sirven para expandir funcionalidades, ya creamos una en su momento y era rara pero incluso cosas como materialdesign que le ponias matbutton y cogía un estilo eso era una directiva que lo coge y personaliza. 
+
+Las directivas personalizadas más comunes son de dos tipos: para modificar un elemento html, por ejemplo te puedes crear una directiva que se la pongas a un span y le cambie el color estilo y forma para que aparezca como mensaje de aviso de un formulario y hasta mandarle el texto que quieres que salga.
+
+Otro uso comun es que sean estructurales como el ngif o ngfor para crear estructuras enteras yo creo que con el if y el for me apaño pero saber que puedes es util. 
+
+RECUERDA: para crear directivas usas ng g d pathynombre
+Eso la crea y te la importa en las declaraciones del modulo más cercano, si quieres usarla fuera la exportas
+La directiva recoge ese elemento html por parámetros y luego tu puedes jugar con ese componente así: 
+ constructor(private el:ElementRef) { 
+   }
+  ngOnInit(): void { 
+    this.el.nativeElement.style.color = 'red'
+  }
+
+  Así le cambiamos el color a ese elemento, podemos recibir más cosas pero solo con recibirlo así ya podemos hacer un monton
+
+  Para recibir argumentos en la directiva se hace con el @Input, así:
+   @Input() color: string = 'red'
+  De esta manera ponemos el red por defecto, pero ahora en la tag html puedes usar la propiedad [color] y pasarle un color y será el que se aplique al texto
+
+  Usando esto con las llaves cuadradas podemos pasarle la propiedad de un componente y lo tomará igual
+
+  Ocultar y poner el mensaje de error en la directiva: Esto normalmente lo hacemos con ngif, si lo hacemos en directiva por hacer más legible el código normalmente vamos a usar la propiedad valid del form, pero la directiva se ejecuta en su momento, no está pendiente, para que esté pendiente tenemos que meterle metodos en base al ciclo de vida de angular.
+
+  Para eso implementamos onchanges y esto se revisará cada vez que cambie, entonces si cambia algo esto lo escucha y podemos revisar la condicion
